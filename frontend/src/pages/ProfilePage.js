@@ -1,83 +1,88 @@
-import React, { useState, useEffect } from 'react';
-import '../styles/Profile.css'; // Custom styles
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { getSingleProfile } from '../services/profileService';
+import { toast } from 'react-toastify';
 
-function ProfilePage() {
-    const [profile, setProfile] = useState({
-        id: '', // MongoDB ID
-        name: '',
-        location: '',
-        skillsOffered: [],
-        skillsWanted: [],
-        availability: '',
-        profileType: 'Public',
-    });
+const PublicProfilePage = () => {
+  const { id } = useParams(); // User ID from route
+  const [profile, setProfile] = useState(null);
 
-    const [editing, setEditing] = useState(false);
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const { data } = await axios.get('http://localhost:5000/api/profile/list'); // Example fetch
-                setProfile(data[0]); // Assume user profile is the first one
-            } catch (error) {
-                console.error('Failed to fetch profile:', error);
-            }
-        };
-
-        fetchProfile();
-    }, []);
-
-    const handleSave = async () => {
-        try {
-            await axios.post('http://localhost:5000/api/profile/update', { id: profile.id, updates: profile });
-            alert('Profile updated successfully!');
-            setEditing(false);
-        } catch (error) {
-            console.error('Failed to update profile:', error);
-        }
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        console.log('Fetching profile for ID:', id); // Debugging
+        const data = await getSingleProfile(id);
+        setProfile(data);
+      } catch (err) {
+        console.error(err); // Debugging
+        toast.error('Failed to load profile');
+      }
     };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setProfile({ ...profile, [name]: value });
-    };
+    if (id) {
+      fetchProfile();
+    } else {
+      toast.error('Invalid profile ID');
+    }
+  }, [id]);
 
-    return (
-        <div className="profile-container">
-            <div className="profile-header">
-                <button className="btn-save" onClick={handleSave} disabled={!editing}>
-                    Save
-                </button>
-                <button className="btn-discard" onClick={() => setEditing(false)} disabled={!editing}>
-                    Discard
-                </button>
-            </div>
-            <div className="profile-body">
-                <div className="profile-field">
-                    <label>Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={profile.name}
-                        onChange={handleChange}
-                        disabled={!editing}
-                    />
-                </div>
-                <div className="profile-field">
-                    <label>Location</label>
-                    <input
-                        type="text"
-                        name="location"
-                        value={profile.location}
-                        onChange={handleChange}
-                        disabled={!editing}
-                    />
-                </div>
-                {/* Add other fields */}
-            </div>
+  const handleRequest = () => {
+    toast.success('Skill Swap Request Sent!');
+    // TODO: Implement actual request logic via backend
+  };
+
+  if (!profile) {
+    return <div className="text-white text-center mt-10">Loading...</div>;
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-950 text-white p-6">
+      <div className="max-w-2xl mx-auto bg-gray-900 p-6 rounded-xl shadow-lg">
+        <h2 className="text-2xl font-bold text-teal-400 mb-4">
+          {profile.name}'s Profile
+        </h2>
+        <p className="text-sm text-gray-400 mb-1">
+          <strong>Location:</strong> {profile.location}
+        </p>
+        <p className="text-sm text-gray-400 mb-1">
+          <strong>Email:</strong> {profile.email}
+        </p>
+        <p className="text-sm text-gray-400 mb-1">
+          <strong>Availability:</strong> {profile.availability}
+        </p>
+
+        <div className="my-4">
+          <h3 className="text-lg font-semibold text-teal-300 mb-2">Skills Offered</h3>
+          <ul className="list-disc ml-5 text-sm text-gray-300">
+            {profile.skillsOffered.map((skill, index) => (
+              <li key={index}>{skill}</li>
+            ))}
+          </ul>
         </div>
-    );
-}
 
-export default ProfilePage;
+        <div className="my-4">
+          <h3 className="text-lg font-semibold text-teal-300 mb-2">Skills Wanted</h3>
+          <ul className="list-disc ml-5 text-sm text-gray-300">
+            {profile.skillsWanted.map((skill, index) => (
+              <li key={index}>{skill}</li>
+            ))}
+          </ul>
+        </div>
+
+        <button
+          onClick={handleRequest}
+          disabled={!localStorage.getItem('token')}
+          className={`w-full mt-4 py-2 rounded ${
+            localStorage.getItem('token')
+              ? 'bg-teal-600 hover:bg-teal-500'
+              : 'bg-gray-700 cursor-not-allowed'
+          }`}
+        >
+          Request Skill Swap
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default PublicProfilePage;

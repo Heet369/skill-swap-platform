@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getMyRequests, respondToRequest, cancelRequest } from '../services/requestService';
 
 const API_URL = 'http://localhost:5000/api/swap';
 

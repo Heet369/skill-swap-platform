@@ -25,3 +25,7 @@ export const updateProfile = async (token, profileData) => {
         throw error.response.data;
     }
 };
+export const getSingleProfile = async (userId) => {
+  const res = await axios.get(`/api/profile/${userId}`);
+  return res.data;
+};
