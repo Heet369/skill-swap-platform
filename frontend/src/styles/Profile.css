@@ -1,0 +1,98 @@
+.profile-container {
+    background: #003366; /* Dark blue background */
+    color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 80%;
+    margin: 2rem auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.btn-save,
+.btn-discard,
+.btn-swap-request,
+.btn-home {
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 1.2rem;
+    margin: 0 0.5rem;
+    cursor: pointer;
+}
+
+.btn-save:hover {
+    color: #66ccff; /* Light blue hover effect */
+}
+
+.btn-discard:hover {
+    color: #ff6666; /* Red hover effect for discard */
+}
+
+.profile-photo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px dashed white;
+    padding: 1rem;
+    border-radius: 50%;
+}
+
+.profile-body .profile-field,
+.profile-skills .skills-section {
+    margin: 1rem 0;
+}
+
+.profile-field label,
+.skills-section label {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.profile-field input,
+.profile-field select {
+    width: 100%;
+    padding: 0.5rem;
+    border: none;
+    border-bottom: 2px solid #66ccff; /* Light blue border */
+    background: transparent;
+    color: white;
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.skill {
+    background: #00509E; /* Blue for skill tags */
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    color: white;
+}
+
+.skill button {
+    background: #ff6666; /* Red for remove button */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+.skill button:hover {
+    background: #cc0000; /* Darker red for hover effect */
+}
